@@ -1,0 +1,103 @@
+package com.intellect.batch.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+@Entity
+@Table(name="ALERTS")
+public class Alert {
+
+	
+	@Id
+	@Column(name="ID")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE)
+	private String alertId;
+	
+	@Column(name="CUSTOMER_NAME")
+	private String customerName;
+	
+	@Column(name="CONSIGNEE_CODE")
+	private String consigneeCode;
+	@Column(name="TRANSPORT_MODE")
+	private String transportMode;
+	@Column(name="ORIGIN_COUNTRY")
+	private String originCountry;
+	@Column(name="EXPORT_COUNTRY")
+	private String exportCountry;
+	@Column(name="SHIPPING_TERM")
+	private String shippingTerm;
+	
+	
+	//@Id
+	//@Column(name="ID")
+	//@GeneratedValue(strategy=GenerationType.SEQUENCE)
+	/*private String alertId;
+	
+	//@Column(name="CUSTOMER_NAME")
+	private String customerName;
+	
+	//@Column(name="CONSIGNEE_CODE")
+	private String consigneeCode;
+	//@Column(name="TRANSPORT_MODE")
+	private String transportMode;
+	//@Column(name="ORIGIN_COUNTRY")
+	private String originCountry;
+	//@Column(name="EXPORT_COUNTRY")
+	private String exportCountry;
+	//@Column(name="SHIPPING_TERM")
+	private String shippingTerm;
+	*/
+	
+	public String getAlertId() {
+		return alertId;
+	}
+	public void setAlertId(String alertId) {
+		this.alertId = alertId;
+	}
+	public String getCustomerName() {
+		return customerName;
+	}
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+	public String getConsigneeCode() {
+		return consigneeCode;
+	}
+	public void setConsigneeCode(String consigneeCode) {
+		this.consigneeCode = consigneeCode;
+	}
+	public String getTransportMode() {
+		return transportMode;
+	}
+	public void setTransportMode(String transportMode) {
+		this.transportMode = transportMode;
+	}
+	public String getOriginCountry() {
+		return originCountry;
+	}
+	public void setOriginCountry(String originCountry) {
+		this.originCountry = originCountry;
+	}
+	public String getExportCountry() {
+		return exportCountry;
+	}
+	public void setExportCountry(String exportCountry) {
+		this.exportCountry = exportCountry;
+	}
+	public String getShippingTerm() {
+		return shippingTerm;
+	}
+	public void setShippingTerm(String shippingTerm) {
+		this.shippingTerm = shippingTerm;
+	}
+	
+	
+	
+
+
+}

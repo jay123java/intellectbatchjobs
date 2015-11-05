@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/jdev/!svn/ver/12138/trunk/IntellectBatchJobs/src/main/java/com/intellect/batch
+END
+LaunchApplication.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/jdev/!svn/ver/12138/trunk/IntellectBatchJobs/src/main/java/com/intellect/batch/LaunchApplication.java
+END
+AlertsWriter.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/jdev/!svn/ver/12138/trunk/IntellectBatchJobs/src/main/java/com/intellect/batch/AlertsWriter.java
+END
+DatabaseConnection.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/jdev/!svn/ver/12138/trunk/IntellectBatchJobs/src/main/java/com/intellect/batch/DatabaseConnection.java
+END
+CustomItemReader.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/jdev/!svn/ver/12138/trunk/IntellectBatchJobs/src/main/java/com/intellect/batch/CustomItemReader.java
+END
+BatchApplication.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/jdev/!svn/ver/12138/trunk/IntellectBatchJobs/src/main/java/com/intellect/batch/BatchApplication.java
+END

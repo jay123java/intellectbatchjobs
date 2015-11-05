@@ -1,0 +1,271 @@
+package com.intellect.batch;
+
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.sql.DataSource;
+
+import org.apache.commons.dbcp.BasicDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean;
+import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.JdbcCursorItemReader;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import com.intellect.batch.model.Alert;
+import com.intellect.batch.writer.AlertsWriter;
+
+
+/*@Configuration
+@EnableScheduling
+@EnableBatchProcessing
+//@EnableJpaRepositories
+@EnableAutoConfiguration*/
+
+//@ComponentScan(basePackages = "com.intellect.batch")
+@PropertySource("classpath:application.properties")
+
+public class BatchApplication extends DefaultBatchConfigurer{
+
+	 private static final Logger logger = LoggerFactory.getLogger(BatchApplication.class);
+
+	    @Value("${url}")
+	    private String connectionUrl;
+
+		@Value("${dbusername}")
+	    private String username;
+
+		@Value("${password}")
+	    private String password;
+
+		@Value("${driver}")
+	    private String driver;
+
+
+	
+	@Override
+	protected JobRepository createJobRepository() throws Exception {
+		MapJobRepositoryFactoryBean factory = new MapJobRepositoryFactoryBean();
+		factory.setTransactionManager(getTransactionManager());
+		factory.setIsolationLevelForCreate("ISOLATION_READ_COMMITTED");
+		/*JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
+		factory.setDataSource(((DataSourceTransactionManager)getTransactionManager()).getDataSource());
+		factory.setTransactionManager(getTransactionManager());
+		factory.setIsolationLevelForCreate("ISOLATION_READ_COMMITTED");
+		factory.afterPropertiesSet();*/
+		return  factory.getObject();
+	}
+	
+	
+	 
+	 @Bean
+		public TaskExecutor taskExecutor() {
+			ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+			taskExecutor.setMaxPoolSize(8);
+			taskExecutor.afterPropertiesSet();
+			return taskExecutor;
+		}
+	 
+
+		@Bean(name="alertsWriter")
+		public ItemWriter<Alert> userWriter(@Value("${insertBookingsAlert}") String bookingAlertsQuery ) {
+			ItemWriter<Alert> writer = new AlertsWriter(bookingAlertsQuery);
+			
+			return writer;
+		}	
+	
+
+		@Bean(name="hblalertsWriter")
+		public ItemWriter<Alert> houseBillAlertWriter(@Value("${insertHouseBillAlerts}") String hblAlertsQuery ) {
+			ItemWriter<Alert> writer = new AlertsWriter(hblAlertsQuery);
+			
+			return writer;
+		}	
+	
+	
+		@Bean(name="bookingsReader")
+		public ItemReader<Alert> bookingsReader(@Qualifier("intellectDataSource") DataSource datasource, DatabaseConnection connection){
+			
+			
+			JdbcCursorItemReader<Alert> reader = new JdbcCursorItemReader<Alert>();
+			reader.setSql(connection.getBookingsQuery());
+			reader.setDataSource(datasource);
+			
+			reader.setRowMapper(new RowMapper<Alert>(){
+
+				@Override
+				public Alert mapRow(ResultSet rs, int arg1)
+						throws SQLException {
+					Alert alert = new Alert();
+					String consigneeCode = rs.getString("CONSIGNEE_CODE");
+					String transportMode = rs.getString("TRANSPORT_MODE");
+					String originCountry = rs.getString("ORIGIN_COUNTRY");
+					String exportCountry = rs.getString("EXPORT_COUNTRY");
+					String shippingTerm = rs.getString("SHIPPING_TERM");
+					alert.setConsigneeCode(consigneeCode);
+					alert.setTransportMode(transportMode);
+					alert.setOriginCountry(originCountry);
+					alert.setExportCountry(exportCountry);
+					alert.setShippingTerm(shippingTerm);
+					alert.setCustomerName(rs.getString("CUSTOMER_NAME"));
+					return alert;
+				}
+				
+			});
+			
+			return reader;
+		}
+		
+
+
+		@Bean(name="hblReader")
+		public ItemReader<Alert> hblReader(@Qualifier("intellectDataSource") DataSource datasource, @Value("${houseBillQuery}") String hblReaderQuery){
+			
+			
+			JdbcCursorItemReader<Alert> reader = new JdbcCursorItemReader<Alert>();
+			reader.setSql(hblReaderQuery);
+			reader.setDataSource(datasource);
+			
+			reader.setRowMapper(new RowMapper<Alert>(){
+
+				@Override
+				public Alert mapRow(ResultSet rs, int arg1)
+						throws SQLException {
+					Alert alert = new Alert();
+					String consigneeCode = rs.getString("CONSIGNEE_CODE");
+					String transportMode = rs.getString("TRANSPORT_MODE");
+					String originCountry = rs.getString("ORIGIN_COUNTRY");
+					String exportCountry = rs.getString("EXPORT_COUNTRY");
+					String shippingTerm = rs.getString("SHIPPING_TERM");
+					alert.setConsigneeCode(consigneeCode);
+					alert.setTransportMode(transportMode);
+					alert.setOriginCountry(originCountry);
+					alert.setExportCountry(exportCountry);
+					alert.setShippingTerm(shippingTerm);
+					alert.setCustomerName(rs.getString("CUSTOMER_NAME"));
+					return alert;
+				}
+				
+			});
+			
+			return reader;
+		}
+		
+
+		
+	
+	
+	@Bean(name="missedBookingsJob")
+	public Job missedBookingsJob(JobBuilderFactory jobs, @Qualifier(value="bookingsStep") Step step) {
+		return jobs.get("missedBookingsJob").incrementer(new RunIdIncrementer())
+				.flow(step).end().build();
+	}
+	
+	@Bean(name="bookingsStep")
+	public Step bookingsStep(StepBuilderFactory stepBuilderFactory,  @Qualifier(value="bookingsReader")
+			ItemReader reader, @Qualifier(value="alertsWriter") ItemWriter writer,
+			  TaskExecutor taskExecutor) {
+		return stepBuilderFactory.get("bookingsStep")
+				
+				. chunk(30).reader(reader)
+				.writer(writer).faultTolerant().taskExecutor(taskExecutor).build();
+	}
+		
+	
+	
+	@Bean(name="missedHblJob")
+	public Job missedHblJob(JobBuilderFactory jobs, @Qualifier(value="houseBillStep") Step step) {
+		return jobs.get("missedHblJob").incrementer(new RunIdIncrementer())
+				.flow(step).end().build();
+	}
+	
+	@Bean(name="houseBillStep")
+	public Step houseBillStep(StepBuilderFactory stepBuilderFactory,  @Qualifier(value="hblReader")
+			ItemReader reader, @Qualifier(value="hblalertsWriter") ItemWriter writer,
+			  TaskExecutor taskExecutor) {
+		return stepBuilderFactory.get("houseBillStep")
+				
+				. chunk(30).reader(reader)
+				.writer(writer).faultTolerant().taskExecutor(taskExecutor).build();
+	}
+	
+	
+
+   @Bean(name="batchDataSource")
+   @ConfigurationProperties(prefix="datasource.batch")
+    public DataSource secondaryDataSource() {
+    return DataSourceBuilder.create().build();
+    }
+   
+
+
+   @Override
+   @Autowired 
+	public void setDataSource(@Qualifier("batchDataSource") DataSource dataSource) {
+		super.setDataSource(dataSource);
+	}
+	
+	@Bean
+	public JdbcTemplate getTemplate(@Qualifier("intellectDataSource") DataSource datasource){
+		
+		return new JdbcTemplate(datasource);
+	}
+	
+	// to use jndi datasource.
+	@Bean(name="intellectDataSource")
+	@Autowired
+	@Primary
+	public DataSource intellectDataSource(DatabaseConnection connection) throws SQLException {
+
+		logger.info("setting up datasource");
+
+		System.out.println(connection.getConnectionUrl());
+		BasicDataSource dbcp = new BasicDataSource();
+		dbcp.setDriverClassName(connection.getDriver());
+		dbcp.setUrl(connection.getConnectionUrl());
+		dbcp.setUsername(connection.getUsername());
+		dbcp.setPassword(connection.getPassword());
+		dbcp.setInitialSize(10);
+		dbcp.setRemoveAbandoned(true);
+		dbcp.setMaxActive(15);
+		return dbcp;
+	   
+	
+	}
+	
+	
+	
+	
+	
+
+	
+	
+	
+
+}	

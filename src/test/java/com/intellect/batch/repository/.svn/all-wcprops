@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/jdev/!svn/ver/12138/trunk/IntellectBatchJobs/src/test/java/com/intellect/batch/repository
+END
+RepositoryTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/jdev/!svn/ver/12138/trunk/IntellectBatchJobs/src/test/java/com/intellect/batch/repository/RepositoryTest.java
+END
+AlertRepositoryTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/jdev/!svn/ver/12138/trunk/IntellectBatchJobs/src/test/java/com/intellect/batch/repository/AlertRepositoryTest.java
+END
