@@ -67,7 +67,9 @@ public class JobConfiguration {
 				String exportCountry = rs.getString("EXPORT_COUNTRY");
 				String shippingTerm = rs.getString("SHIPPING_TERM");
 				String alertNo = rs.getString("PO_NUMBER");
-
+				String companyCode = rs.getString("COMPANY_CODE");
+				//String email = rs.getString("email");
+				
 				alert.setConsigneeCode(consigneeCode);
 				alert.setTransportMode(transportMode);
 				alert.setOriginCountry(originCountry);
@@ -75,6 +77,8 @@ public class JobConfiguration {
 				alert.setShippingTerm(shippingTerm);
 				alert.setCustomerName(rs.getString("CUSTOMER_NAME"));
 				alert.setAlertNumber(alertNo);
+				alert.setCompanyCode(companyCode);
+				
 				return alert;
 			}
 			
@@ -105,6 +109,7 @@ public class JobConfiguration {
 				String exportCountry = rs.getString("EXPORT_COUNTRY");
 				String shippingTerm = rs.getString("SHIPPING_TERM");
 				String  alertNo = rs.getString("BOOKING_NO");
+				String companyCode = rs.getString("COMPANY_CODE");
 
 				alert.setConsigneeCode(consigneeCode);
 				alert.setTransportMode(transportMode);
@@ -113,6 +118,8 @@ public class JobConfiguration {
 				alert.setShippingTerm(shippingTerm);
 				alert.setCustomerName(rs.getString("CUSTOMER_NAME"));
 				alert.setAlertNumber(alertNo);
+				alert.setCompanyCode(companyCode);
+
 				return alert;
 			}
 			
@@ -162,25 +169,53 @@ public Step houseBillStep(StepBuilderFactory stepBuilderFactory,  @Qualifier(val
 
 
 @Bean(name="emailNotificationJob")
-public Job emailNoticicationJob(JobBuilderFactory jobs, @Qualifier(value="emailNotificationStep") Step step) {
+public Job emailNoticicationJob(JobBuilderFactory jobs, @Qualifier(value="bookingsemailNotificationStep") Step step) {
 	return jobs.get("emailNotificationJob").incrementer(new RunIdIncrementer())
 			.flow(step).end().build();
 }
 
-@Bean(name="emailNotificationStep")
-public Step emailNotificationStep(StepBuilderFactory stepBuilderFactory,  @Qualifier(value="emailNotiicationTasklet")
+@Bean(name="bookingsemailNotificationStep")
+public Step emailNotificationStep(StepBuilderFactory stepBuilderFactory,  @Qualifier(value="bookingsEmailNotificationTasklet")
 Tasklet tasklet
 	) {
-	return stepBuilderFactory.get("emailNotificationStep").tasklet(tasklet).build();
+	return stepBuilderFactory.get("bookingsemailNotificationStep").tasklet(tasklet).build();
 }
 
-  @Bean(name="emailNotiicationTasklet")
-  public Tasklet emailNotiicationTasklet(@Value("${selectAlertsQuery}") String selectAlertsQuery) {
+  @Bean(name="bookingsEmailNotificationTasklet")
+  public Tasklet emailNotiicationTasklet(@Value("${selectBookingsAlertsQuery}") String selectAlertsQuery, 
+		  @Value("${bookingsAlert.subject}") String alertSubject, @Value("${bookingsAlert.template}") String alertTemplatePath) {
 	  EmailNotificationTasklet  tasklet = new EmailNotificationTasklet();
 	  tasklet.setSelectAlertsQuery(selectAlertsQuery);
+	  tasklet.setAlertSubject(alertSubject);
+	  tasklet.setEmailTemplatePath(alertTemplatePath);
     return tasklet; 
   }
-			
+  
+  @Bean(name="houseBillemailNotificationJob")
+  public Job housebillNotificationJob(JobBuilderFactory jobs, @Qualifier(value="housebillemailNotificationStep") Step step) {
+  	return jobs.get("houseBillemailNotificationJob").incrementer(new RunIdIncrementer())
+  			.flow(step).end().build();
+  }
+  
+  @Bean(name="housebillemailNotificationStep")
+  public Step houseBillemailNotificationStep(StepBuilderFactory stepBuilderFactory,  @Qualifier(value="housebillEmailNotificationTasklet")
+  Tasklet tasklet
+  	) {
+  	return stepBuilderFactory.get("housebillemailNotificationStep").tasklet(tasklet).build();
+  }
+
+    @Bean(name="housebillEmailNotificationTasklet")
+    public Tasklet houseBillemailNotiicationTasklet(@Value("${selectHouseBillAlertsQuery}") String selectAlertsQuery,
+    		@Value("${housebillAlert.subject}") String alertSubject, @Value("${housebillAlert.template}") String alertTemplatePath) {
+  	  EmailNotificationTasklet  tasklet = new EmailNotificationTasklet();
+  	  tasklet.setSelectAlertsQuery(selectAlertsQuery);
+  	  tasklet.setAlertSubject(alertSubject);
+	  tasklet.setEmailTemplatePath(alertTemplatePath);
+      return tasklet; 
+    }
+
+    
+    
 
 
 

@@ -46,7 +46,8 @@ public class AlertsWriter implements ItemWriter<Alert>{
 			    	ps.setString(5, item.getShippingTerm());
 			    	ps.setString(6, item.getConsigneeCode());
 			    	ps.setString(7, item.getCustomerName());
-			    	
+			    	ps.setString(8, item.getCompanyCode());
+
 			    	
 			        return ps.execute();  
 			              

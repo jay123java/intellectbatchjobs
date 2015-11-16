@@ -6,12 +6,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 @Entity(name="USER_ALERT_PREFERENCES")
+@SequenceGenerator(name="ALERTSEQ", sequenceName="USER_ALERT_PREFERENCES_SEQ", initialValue=1)
+
 public class UserAlertPreference {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="ALERTSEQ")
 	private long id;
 	
 	private String userId;
@@ -24,34 +27,12 @@ public class UserAlertPreference {
 
     private boolean isActive;
     
-    private Calendar dateCreated;
+
+	private Integer alertTypeId;
+		
+	private Calendar dateCreated;
     
     private Calendar dateModified;
-    
-    
-	public Calendar getDateCreated() {
-		return dateCreated;
-	}
-
-	public void setDateCreated(Calendar dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-
-	public Calendar getDateModified() {
-		return dateModified;
-	}
-
-	public void setDateModified(Calendar dateModified) {
-		this.dateModified = dateModified;
-	}
-
-	public boolean isActive() {
-		return isActive;
-	}
-
-	public void setActive(boolean isActive) {
-		this.isActive = isActive;
-	}
 
 	public long getId() {
 		return id;
@@ -92,7 +73,42 @@ public class UserAlertPreference {
 	public void setDaysBefore(Integer daysBefore) {
 		this.daysBefore = daysBefore;
 	}
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+	
+
+    public Integer getAlertTypeId() {
+		return alertTypeId;
+	}
+
+	public void setAlertTypeId(Integer alertTypeId) {
+		this.alertTypeId = alertTypeId;
+	}
+
+
+	public Calendar getDateCreated() {
+		return dateCreated;
+	}
+
+	public void setDateCreated(Calendar dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	public Calendar getDateModified() {
+		return dateModified;
+	}
+
+	public void setDateModified(Calendar dateModified) {
+		this.dateModified = dateModified;
+	}
     
+   
 
 	
 

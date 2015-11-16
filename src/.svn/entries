@@ -1,34 +1,0 @@
-10
-
-dir
-12138
-http://192.168.1.64:9880/jdev/trunk/IntellectBatchJobs/src
-http://192.168.1.64:9880/jdev
-
-
-
-2015-09-21T00:30:44.887401Z
-12138
-jayaprakash
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-4f00b6a4-215b-0d4b-8a78-79fa09cd82db
-
-main
-dir
-
-test
-dir
-

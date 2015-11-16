@@ -2,9 +2,9 @@ package com.intellect.batch.configuration;
 
 import java.util.Properties;
 
+import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -34,5 +34,10 @@ public class EmailConfiguration {
 	        mailSender.setPassword(mailProperties.getPassword());
 	        return mailSender;
 	    }
+	    
+	    
+
+		
+		
 }
 

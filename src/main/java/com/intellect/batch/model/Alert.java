@@ -1,11 +1,16 @@
 package com.intellect.batch.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 
 @Entity
@@ -35,6 +40,16 @@ public class Alert {
 	@Column(name="CUSTOMER_NAME")
 	private String customerName;
 	
+
+	@Column(name="COMPANY_CODE")
+	private String companyCode;
+
+	public String getCompanyCode() {
+		return companyCode;
+	}
+	public void setCompanyCode(String companyCode) {
+		this.companyCode = companyCode;
+	}
 	public String getAlertNumber() {
 		return alertNumber;
 	}
@@ -51,6 +66,23 @@ public class Alert {
 	private String exportCountry;
 	@Column(name="SHIPPING_TERM")
 	private String shippingTerm;
+	
+	@Column(name="IS_ACTIVE")
+	private boolean isActive;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="CREATED_TIME")
+	private Date createdTime;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="UPDATED_TIME")
+	private Date modifiedTime;
+	
+	@Transient
+	private String email;
+	
+	@Transient
+	private String fullName;
 	
 	
 	//@Id
@@ -73,6 +105,36 @@ public class Alert {
 	private String shippingTerm;
 	*/
 	
+	public boolean isActive() {
+		return isActive;
+	}
+	public String getFullName() {
+		return fullName;
+	}
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+	public Date getCreatedTime() {
+		return createdTime;
+	}
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
+	}
+	public Date getModifiedTime() {
+		return modifiedTime;
+	}
+	public void setModifiedTime(Date modifiedTime) {
+		this.modifiedTime = modifiedTime;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	public String getAlertId() {
 		return alertId;
 	}
